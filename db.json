@@ -1,0 +1,10 @@
+{
+  "students": [
+    { "name": "Anjali", "age": 23, "password": 1234 },
+    { "name": "Navneet", "age": 28, "password": 123 },
+    { "name": "Neha", "age": 21, "password": 12345 },
+    { "userName": "Dimple Pandey", "age": 22, "password": 123456 },
+    { "userName": "Dimple Pandey", "age": 22, "password": 123456 }
+  ],
+  "teacher": []
+}
