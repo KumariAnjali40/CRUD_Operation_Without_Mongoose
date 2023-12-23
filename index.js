@@ -61,38 +61,46 @@ app.post("/addstudent",(req,res)=>{
 
 
 
-//patch request.
-app.patch("/updateuser/:id",(req,res)=>{
 
-      const studentIdToUpdate=req.name.id;
-    //step1===> Read the complete data file.
-    const data =fs.readFileSync("./db.json","utf-8");
-
-    //step2===> parse the data.
-    const parsed_data=JSON.parse(data);
-
-    //step3===>find the index of the student with the given id.
-    const updateIndex=parsed_data.students.findIndex(student =>{
-        student.id===studentIdToUpdate;
+app.patch("/udatestudent/:id",(req,res)=>{
+    const studentId=req.params.id;
+    const updateStudent=req.body;
+    const data=JSON.parse(fs.readFileSync("./db.json","utf-8"));
+    let student=data.students;
+    let index=-1;
+    let count=0;
+    student.forEach((stu)=>{
+        if(stu.id===studentId){
+            index=count;
+        }
+        count++;
     })
-    if(updateIndex!== -1){
-        //update the student data.
-        parsed_data.students[updateIndex]={...parsed_data.student[updateIndex], ...req.body};
-
-        //wirte the complete data back to file.
-        fs.writeFileSync("./db.json", JSON.stringify(parsed_data));
-
-        res.send("Student updated")
-    }else{
-        res.status(404).send("student not found");
-    }
-});
-
-
-//delete
-app.delete("/deleteuser",(res,req)=>{
-   
+    data.students[index]={...data.students[index], ...updateStudent}
+    fs.writeFileSync("./db.json",JSON.stringify(data));
+    res.send("Wohho!   Student updated");
 })
+
+
+
+
+// delete
+app.delete("/deleteuser/:id", (req, res) => {
+    let id = req.params.id;
+    const data = JSON.parse(fs.readFileSync("./db.json", "utf-8"));
+    let index = data.students.findIndex((student) => {
+       return student.id == Number.parseInt(id);
+    });
+ 
+    if (index >= 0) {
+       let deletedStudent = data.students[index];
+       data.students.splice(index, 1);
+       fs.writeFileSync("./db.json", JSON.stringify(data));
+       res.json(deletedStudent);
+    } else {
+       res.status(404).send("Student not found");
+    }
+ });
+ 
 
 app.listen(4500,()=>{
     console.log("Server is running at port 4500");
